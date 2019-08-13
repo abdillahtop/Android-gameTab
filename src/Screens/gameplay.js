@@ -4,11 +4,13 @@ var Sound = require('react-native-sound');
 
 export default class HomeScreen extends React.Component {
     render() {
-        const sound = new Sound('simbal.mp3', null, (error) => {
+        const sound = new Sound(require('../Assets/Ride1.wav'), null, (error) => {
             if (error) {
-                // do something
+                console.warn(error)
             }
+            sound.setVolume(1.0)
         })
+
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <TouchableOpacity
@@ -36,7 +38,7 @@ export default class HomeScreen extends React.Component {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => alert('Hello')}
+                    onPress={() => sound.play()}
                     style={{
                         borderWidth: 1,
                         borderColor: 'rgba(0,0,0,0.2)',
@@ -60,7 +62,7 @@ export default class HomeScreen extends React.Component {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => alert('Hello')}
+                    onPress={() => sound.play()}
                     style={{
                         borderWidth: 1,
                         borderColor: 'rgba(0,0,0,0.2)',
@@ -84,7 +86,7 @@ export default class HomeScreen extends React.Component {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => alert('Hello')}
+                    onPress={() => sound.play()}
                     style={{
                         borderWidth: 1,
                         borderColor: 'rgba(0,0,0,0.2)',

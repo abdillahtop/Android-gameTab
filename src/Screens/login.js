@@ -1,9 +1,42 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage } from "react-native";
 import { Container, Content, Form, Item, Input, Label } from 'native-base';
+import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { postLogin } from '../public/redux/action/user'
 
-export default class Login extends React.Component {
+class Login extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            users: [],
+            email: '',
+            password: ''
+        }
+    }
+
+    isLogin = async () => {
+        if (this.state.email !== '' && this.state.password !== '') {
+
+            let data = {
+                email: this.state.email,
+                password: this.state.password
+            }
+            await this.props.dispatch(postLogin(data))
+            this.props.navigation.navigate('Home')
+
+            // AsyncStorage.getItem('token', (error, result) => {
+            //     if (result) {
+            //         this.props.navigation.navigate('Home')
+            //     } else {
+            //         alert('Terjadi Kesalahan saat Login')
+            //     }
+            // })
+        } else {
+            alert('Warning, please insert Data in form')
+        }
+    }
+
     render() {
         return (
             <View style={{ flex: 1, marginHorizontal: 20 }}>
@@ -13,11 +46,19 @@ export default class Login extends React.Component {
                             <Text style={styles.textLogin}>Login</Text>
                             <Item rounded style={{ marginBottom: 20 }}>
                                 <Ionicons name="ios-person" style={styles.iconStyle} size={18} />
-                                <Input style={styles.inputStyle} placeholder="Email" placeholderTextColor="#bbb" />
+                                <Input
+                                    style={styles.inputStyle}
+                                    placeholder="Email"
+                                    placeholderTextColor="#bbb"
+                                    onChangeText={email => this.setState({ email })} />
                             </Item>
                             <Item rounded style={{ marginBottom: 20 }}>
                                 <Ionicons name="ios-lock" style={styles.iconStyle} size={18} />
-                                <Input style={styles.inputStyle} placeholder="Password" placeholderTextColor="#bbb" />
+                                <Input
+                                    style={styles.inputStyle}
+                                    placeholder="Password"
+                                    placeholderTextColor="#bbb"
+                                    onChangeText={password => this.setState({ password })} />
                             </Item>
                             <View style={{ flexDirection: 'row', marginTop: 20 }}>
                                 <TouchableOpacity
@@ -33,6 +74,7 @@ export default class Login extends React.Component {
                                     <Text style={{ color: '#6c63ff' }}>Sign Up</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
+                                    onPress={() => this.isLogin()}
                                     style={{
                                         borderWidth: 1,
                                         borderColor: 'rgba(0,0,0,0.2)',
@@ -57,6 +99,13 @@ export default class Login extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        login: state.login
+    }
+}
+export default connect(mapStateToProps)(Login)
 
 const styles = StyleSheet.create({
     textLogin: {

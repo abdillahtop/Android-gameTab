@@ -1,23 +1,57 @@
 import React, { Component } from 'react';
-import { Image, SafeAreaView, StyleSheet, ScrollView, } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
 import { ListItem, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { withNavigation } from 'react-navigation';
+import { connect } from 'react-redux'
+import { postLogout } from '../public/redux/action/user'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class ComponentDrawer extends Component {
+    constructor() {
+        super()
+        this.state = {
+            data: [],
+            token: '',
+
+        }
+        AsyncStorage.getItem('token', (error, result) => {
+            if (result) {
+                this.setState({
+                    token: result
+                })
+            }
+        })
+    }
+
+    isLogout() {
+        this.props.dispatch(postLogout(this.state.userid))
+        alert('Berhasil Logout')
+    }
 
     render() {
+        const data = this.props.users.userList
+        console.log("data : ", this.props.users.userList.name)
         return (
             <SafeAreaView style={{
                 flex: 1, backgroundColor: '#fff', elevation: 20
             }
             }>
                 <View style={styles.profilTemplate}>
-                    <TouchableOpacity>
+                    {
+                        console.log('drawer', this.props.users),
+                    this.props.users.isLogin === false
+                    ?
+                            <TouchableOpacity>
                         <Image source={require('../Assets/user.png')} style={styles.profilImage} />
                         <Text style={styles.profilName}> User</Text>
                     </TouchableOpacity>
+                    :
+                            <TouchableOpacity>
+                        <Image source={require('../Assets/user.png')} style={styles.profilImage} />
+                        <Text style={styles.profilName}>{data.name}</Text>
+                    </TouchableOpacity>
+                    }
                 </View >
                 <View style={{ flex: 1 }}>
                     <ScrollView >
@@ -27,12 +61,23 @@ class ComponentDrawer extends Component {
                                 <Text style={styles.textIcon}>Leaderboards</Text>
                             </ListItem>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
-                            <ListItem >
-                                <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
-                                <Text style={styles.textIcon}>Login</Text>
-                            </ListItem>
-                        </TouchableOpacity>
+                        {
+                            this.props.users.isLogin === false
+                                ?
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+                                    <ListItem >
+                                        <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
+                                        <Text style={styles.textIcon}>Login</Text>
+                                    </ListItem>
+                                </TouchableOpacity>
+                                :
+                                <TouchableOpacity onPress={() => this.isLogout()}>
+                                    <ListItem >
+                                        <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
+                                        <Text style={styles.textIcon}>Logout</Text>
+                                    </ListItem>
+                                </TouchableOpacity>
+                        }
                     </ScrollView>
                 </View>
                 <Image source={require('../Assets/gam1.png')} style={styles.gambar1} />
@@ -41,7 +86,12 @@ class ComponentDrawer extends Component {
     }
 }
 
-export default withNavigation(ComponentDrawer)
+const mapStateToProps = state => {
+    return {
+        users: state.user
+    }
+}
+export default connect(mapStateToProps)(withNavigation(ComponentDrawer))
 
 const styles = StyleSheet.create({
     textIcon: {
