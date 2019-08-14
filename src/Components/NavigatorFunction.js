@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
-import { createAppContainer, createDrawerNavigator, SafeAreaView, createStackNavigator } from 'react-navigation';
+import { TouchableOpacity, Image } from 'react-native';
+import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import ComponentDrawer from './ComponentDrawer'
 import HomeScreen from '../Screens/home'
 import Leaderboard from '../Screens/leaderboard'
 import Login from '../Screens/login'
 import Gameplay from '../Screens/gameplay'
+import Register from '../Screens/register'
 
 const leaderStack = createStackNavigator(
     {
@@ -38,11 +39,15 @@ const leaderStack = createStackNavigator(
             navigationOptions: {
                 header: null,
             }
+        },
+        Register: {
+            screen: Register
         }
     }
 );
 
 const DrawerNavigator = createDrawerNavigator(
+
     {
         Home: { screen: leaderStack },
         Gameplay: { screen: Gameplay },

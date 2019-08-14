@@ -1,62 +1,57 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Container, Content, Form, Item, Input } from 'native-base';
 import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { postLogin } from '../public/redux/action/user'
+import { postRegister } from '../public/redux/action/user'
 
-class Login extends React.Component {
+class Register extends React.Component {
     constructor() {
         super();
         this.state = {
             users: [],
-            email: 'tes1@coba.com',
-            password: '1234'
+            name: '',
+            email: '',
+            password: ''
         }
-        this._bootstrapAsync();
     }
 
-    _bootstrapAsync = async () => {
-        const userToken = await AsyncStorage.getItem('Token');
-
-        this.props.navigation.navigate(userToken ? 'Home' : 'Login');
-    };
-
-    isLogin = async () => {
-        if (this.state.email !== '' && this.state.password !== '') {
+    isRegister = async () => {
+        if (this.state.name !== '' && this.state.email !== '' && this.state.password !== '') {
 
             let data = {
+                name: this.state.name,
                 email: this.state.email,
                 password: this.state.password
             }
-            await this.props.dispatch(postLogin(data))
-
-            AsyncStorage.getItem('Token', (error, result) => {
-                if (result) {
-                    this.props.navigation.navigate('Home')
-                } else {
-                    alert('Terjadi Kesalahan saat Login')
-                }
-            })
+            await this.props.dispatch(postRegister(data))
         } else {
             alert('Warning, please insert Data in form')
         }
     }
 
     render() {
+
         return (
             <View style={{ flex: 1, marginHorizontal: 20 }}>
                 <Container>
                     <Content>
-                        <Form style={{ marginTop: 80 }}>
-                            <Text style={styles.textLogin}>Login</Text>
+                        <Form style={{ marginTop: 20 }}>
+                            <Text style={styles.textLogin}>Register</Text>
+                            <Item rounded style={{ marginBottom: 20 }}>
+                                <Ionicons name="ios-lock" style={styles.iconStyle} size={18} />
+                                <Input
+                                    style={styles.inputStyle}
+                                    placeholder="Nama"
+                                    placeholderTextColor="#bbb"
+                                    onChangeText={name => this.setState({ name })} />
+                            </Item>
                             <Item rounded style={{ marginBottom: 20 }}>
                                 <Ionicons name="ios-person" style={styles.iconStyle} size={18} />
                                 <Input
                                     style={styles.inputStyle}
                                     placeholder="Email"
                                     placeholderTextColor="#bbb"
-                                    value='tes1@coba.com'
                                     onChangeText={email => this.setState({ email })} />
                             </Item>
                             <Item rounded style={{ marginBottom: 20 }}>
@@ -65,25 +60,11 @@ class Login extends React.Component {
                                     style={styles.inputStyle}
                                     placeholder="Password"
                                     placeholderTextColor="#bbb"
-                                    value='1234'
                                     onChangeText={password => this.setState({ password })} />
                             </Item>
-                            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                            <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                 <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate('Register')}
-                                    style={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: 130,
-                                        height: 50,
-                                        borderRadius: 10,
-                                        flexDirection: "row",
-                                        marginLeft: 40
-                                    }}>
-                                    <Text style={{ color: '#6c63ff' }}>Sign Up</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => this.isLogin()}
+                                    onPress={() => this.isRegister()}
                                     style={{
                                         borderWidth: 1,
                                         borderColor: 'rgba(0,0,0,0.2)',
@@ -94,15 +75,15 @@ class Login extends React.Component {
                                         backgroundColor: '#6c63ff',
                                         borderRadius: 10,
                                         flexDirection: "row",
-                                        marginLeft: 5
+                                        marginLeft: 180
                                     }}>
-                                    <Text style={{ color: 'white' }}>Login</Text>
+                                    <Text style={{ color: 'white' }}>Register</Text>
                                     <Ionicons name="ios-arrow-round-forward" style={{ marginLeft: 10, color: 'white' }} size={24} />
                                 </TouchableOpacity>
                             </View>
                         </Form>
                     </Content>
-                    <Image source={require('../Assets/gam2.png')} style={styles.gambar2} />
+                    {/* <Image source={require('../Assets/gam1.png')} style={styles.gambar2} /> */}
                 </Container>
             </View>
         );
@@ -114,7 +95,7 @@ const mapStateToProps = state => {
         login: state.login
     }
 }
-export default connect(mapStateToProps)(Login)
+export default connect(mapStateToProps)(Register)
 
 const styles = StyleSheet.create({
     textLogin: {
@@ -126,8 +107,7 @@ const styles = StyleSheet.create({
     },
     gambar2: {
         position: "absolute",
-        marginTop: 360,
-        marginLeft: -20,
+        marginTop: 370,
         opacity: .8
     },
     score: {

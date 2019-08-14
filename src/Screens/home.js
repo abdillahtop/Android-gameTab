@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, Button, StyleSheet } from "react-native";
-var Sound = require('react-native-sound');
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 export default class HomeScreen extends React.Component {
     render() {

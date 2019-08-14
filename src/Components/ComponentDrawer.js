@@ -11,14 +11,37 @@ class ComponentDrawer extends Component {
     constructor() {
         super()
         this.state = {
-            data: [],
             token: '',
+            name: '',
+            userid: '',
+            role: ''
 
         }
-        AsyncStorage.getItem('token', (error, result) => {
+        AsyncStorage.getItem('Name', (error, result) => {
+            if (result) {
+                this.setState({
+                    name: result
+                })
+            }
+        })
+        AsyncStorage.getItem('Token', (error, result) => {
             if (result) {
                 this.setState({
                     token: result
+                })
+            }
+        })
+        AsyncStorage.getItem('Userid', (error, result) => {
+            if (result) {
+                this.setState({
+                    userid: result
+                })
+            }
+        })
+        AsyncStorage.getItem('Role', (error, result) => {
+            if (result) {
+                this.setState({
+                    role: result
                 })
             }
         })
@@ -26,12 +49,21 @@ class ComponentDrawer extends Component {
 
     isLogout() {
         this.props.dispatch(postLogout(this.state.userid))
-        alert('Berhasil Logout')
+        AsyncStorage.getItem('Token', (error, result) => {
+            if (result) {
+                alert('Berhasil Logout')
+                this.props.navigation.navigate('Home')
+            } else {
+                alert('Terjadi Kesalahan saat Logout')
+            }
+        })
     }
 
     render() {
-        const data = this.props.users.userList
-        console.log("data : ", this.props.users.userList.name)
+        // console.warn("name", this.state.name)
+        // console.warn("token", this.state.token)
+        // console.warn("userid", this.state.userid)
+        // console.warn("Role", this.state.role)
         return (
             <SafeAreaView style={{
                 flex: 1, backgroundColor: '#fff', elevation: 20
@@ -39,18 +71,17 @@ class ComponentDrawer extends Component {
             }>
                 <View style={styles.profilTemplate}>
                     {
-                        console.log('drawer', this.props.users),
-                    this.props.users.isLogin === false
-                    ?
+                        this.state.role === 'user'
+                            ?
                             <TouchableOpacity>
-                        <Image source={require('../Assets/user.png')} style={styles.profilImage} />
-                        <Text style={styles.profilName}> User</Text>
-                    </TouchableOpacity>
-                    :
+                                <Image source={require('../Assets/man.png')} style={styles.profilImage} />
+                                <Text style={styles.profilName}>{this.state.name}</Text>
+                            </TouchableOpacity>
+                            :
                             <TouchableOpacity>
-                        <Image source={require('../Assets/user.png')} style={styles.profilImage} />
-                        <Text style={styles.profilName}>{data.name}</Text>
-                    </TouchableOpacity>
+                                <Image source={require('../Assets/user.png')} style={styles.profilImage} />
+                                <Text style={styles.profilName}>User</Text>
+                            </TouchableOpacity>
                     }
                 </View >
                 <View style={{ flex: 1 }}>
@@ -61,22 +92,21 @@ class ComponentDrawer extends Component {
                                 <Text style={styles.textIcon}>Leaderboards</Text>
                             </ListItem>
                         </TouchableOpacity>
-                        {
-                            this.props.users.isLogin === false
-                                ?
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
-                                    <ListItem >
-                                        <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
-                                        <Text style={styles.textIcon}>Login</Text>
-                                    </ListItem>
-                                </TouchableOpacity>
-                                :
-                                <TouchableOpacity onPress={() => this.isLogout()}>
-                                    <ListItem >
-                                        <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
-                                        <Text style={styles.textIcon}>Logout</Text>
-                                    </ListItem>
-                                </TouchableOpacity>
+                        {this.state.role === 'user'
+                            ?
+                            <TouchableOpacity onPress={() => this.isLogout()}>
+                                <ListItem >
+                                    <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
+                                    <Text style={styles.textIcon}>Logout</Text>
+                                </ListItem>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+                                <ListItem >
+                                    <Ionicons name="ios-log-in" style={styles.iconStyle} size={20} />
+                                    <Text style={styles.textIcon}>Login</Text>
+                                </ListItem>
+                            </TouchableOpacity>
                         }
                     </ScrollView>
                 </View>

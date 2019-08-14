@@ -44,9 +44,10 @@ const user = (state = initialState, action) => {
                 isRejected: true,
             }
         case 'POST_LOGIN_FULFILLED':
-            console.log("reducer:", action.payload.data.result)
-            AsyncStorage.setItem('Data', action.payload.data.result)
-            AsyncStorage.setItem('token', action.payload.data.result.token.toString())
+            AsyncStorage.setItem('Token', action.payload.data.result.token)
+            AsyncStorage.setItem('Name', action.payload.data.result.name)
+            AsyncStorage.setItem('Role', action.payload.data.result.role_name)
+            AsyncStorage.setItem('Userid', action.payload.data.result.id_user.toString())
             return {
                 ...state,
                 isLoading: false,
@@ -74,6 +75,28 @@ const user = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 isLogin: false,
+                isFulfilled: true,
+                userList: action.payload.data.result,
+            }
+        case 'POST_DATA_BY_TOKEN_PENDING':
+            return {
+                ...state,
+                isLoading: true,
+                isFulfilled: false,
+                isRejected: false,
+            }
+        case 'POST_DATA_BY_TOKEN_REJECTED':
+            return {
+                ...state,
+                isLoading: false,
+                isRejected: true,
+            }
+        case 'POST_DATA_BY_TOKEN_FULFILLED':
+            AsyncStorage.clear()
+            return {
+                ...state,
+                isLoading: false,
+                isLogin: true,
                 isFulfilled: true,
                 userList: action.payload.data.result,
             }
