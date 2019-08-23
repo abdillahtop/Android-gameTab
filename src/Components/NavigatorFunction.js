@@ -1,6 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Image } from 'react-native';
 import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import ComponentDrawer from './ComponentDrawer'
 import HomeScreen from '../Screens/home'
 import Leaderboard from '../Screens/leaderboard'
@@ -12,18 +14,18 @@ const leaderStack = createStackNavigator(
     {
         Home: {
             screen: HomeScreen,
-            navigationOptions: {
+            navigationOptions: ({ navigation }) => ({
                 headerLeft: (
-                    <TouchableOpacity>
-                        <Image source={require('../Assets/user.png')} style={{ width: 30, height: 30, marginLeft: 20 }} />
+                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={{ marginLeft: 20 }}>
+                        <Ionicons name="ios-menu" size={30} />
                     </TouchableOpacity>
                 ),
                 headerRight: (
-                    <TouchableOpacity>
-                        <Image source={require('../Assets/crown.png')} style={{ width: 25, height: 25, marginRight: 20 }} />
-                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Leaderboard')}>
+                        <Image source={require('../Assets/crown.png')} style={{ width: 30, height: 30, marginRight: 20 }} />
+                    </TouchableOpacity >
                 )
-            }
+            })
         },
         Gameplay: {
             screen: Gameplay,
@@ -32,7 +34,10 @@ const leaderStack = createStackNavigator(
             }
         },
         Leaderboard: {
-            screen: Leaderboard
+            screen: Leaderboard,
+            navigationOptions: {
+                title: 'Leaderboard'
+            }
         },
         Login: {
             screen: Login,

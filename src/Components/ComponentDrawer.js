@@ -14,7 +14,8 @@ class ComponentDrawer extends Component {
             token: '',
             name: '',
             userid: '',
-            role: ''
+            role: '',
+            isLoading: false
 
         }
         AsyncStorage.getItem('Name', (error, result) => {
@@ -47,7 +48,12 @@ class ComponentDrawer extends Component {
         })
     }
 
+    // componentDidMount() {
+    //     alert('haha')
+    // }
+
     isLogout() {
+        console.warn("userid:", this.state.userid)
         this.props.dispatch(postLogout(this.state.userid))
         AsyncStorage.getItem('Token', (error, result) => {
             if (result) {
@@ -59,11 +65,16 @@ class ComponentDrawer extends Component {
         })
     }
 
+    // onFocus() {
+    //     alert("hahah")
+    // }
+
     render() {
         // console.warn("name", this.state.name)
         // console.warn("token", this.state.token)
         // console.warn("userid", this.state.userid)
-        // console.warn("Role", this.state.role)
+        // console.warn("Role", this.state.rol
+
         return (
             <SafeAreaView style={{
                 flex: 1, backgroundColor: '#fff', elevation: 20

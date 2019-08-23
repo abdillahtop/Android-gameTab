@@ -11,7 +11,7 @@ export const postRegister = (data) => {
 export const postLogin = (data) => {
     return {
         type: 'POST_LOGIN',
-        payload: axios.post(`${api}login`, data)
+        payload: axios.post(`${api}login`, data),
     }
 }
 

@@ -44,6 +44,7 @@ const user = (state = initialState, action) => {
                 isRejected: true,
             }
         case 'POST_LOGIN_FULFILLED':
+            AsyncStorage.setItem('Data', action.payload.data.result)
             AsyncStorage.setItem('Token', action.payload.data.result.token)
             AsyncStorage.setItem('Name', action.payload.data.result.name)
             AsyncStorage.setItem('Role', action.payload.data.result.role_name)

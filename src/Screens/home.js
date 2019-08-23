@@ -1,15 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, AsyncStorage } from "react-native";
 
 export default class HomeScreen extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            role: '',
+        }
+
+        AsyncStorage.getItem('Role', (error, result) => {
+            if (result) {
+                this.setState({
+                    role: result
+                })
+            }
+        })
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
                 <Image source={require('../Assets/gam1.png')} style={styles.gambar1} />
                 <Image source={require('../Assets/gam2.png')} style={styles.gambar2} />
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 200 }}>
-                    <Text style={{ color: '#666', fontSize: 30, fontWeight: '600', marginBottom: 20 }}>High Score</Text>
-                    <Text style={{ color: '#6c63ff', fontSize: 24, fontWeight: '600', marginBottom: 20 }}>0</Text>
                     <TouchableOpacity style={styles.butStart} onPress={() => this.props.navigation.navigate('Gameplay')}>
                         <Text style={{ color: 'white', fontSize: 24, fontWeight: '600', }}>Start</Text>
                     </TouchableOpacity>
@@ -35,6 +48,7 @@ const styles = StyleSheet.create({
         opacity: .5
     },
     butStart: {
+        marginTop: 20,
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.2)',
         alignItems: 'center',

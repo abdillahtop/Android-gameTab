@@ -25,6 +25,7 @@ class Register extends React.Component {
                 password: this.state.password
             }
             await this.props.dispatch(postRegister(data))
+            this.props.navigation.navigate('Login')
         } else {
             alert('Warning, please insert Data in form')
         }
@@ -60,6 +61,7 @@ class Register extends React.Component {
                                     style={styles.inputStyle}
                                     placeholder="Password"
                                     placeholderTextColor="#bbb"
+                                    secureTextEntry={true}
                                     onChangeText={password => this.setState({ password })} />
                             </Item>
                             <View style={{ flexDirection: 'row', marginTop: 10 }}>

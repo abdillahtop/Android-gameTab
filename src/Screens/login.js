@@ -10,17 +10,19 @@ class Login extends React.Component {
         super();
         this.state = {
             users: [],
-            email: 'tes1@coba.com',
-            password: '1234'
+            email: '',
+            password: '',
+            token: ''
         }
-        this._bootstrapAsync();
+        AsyncStorage.getItem('Token', (error, result) => {
+            if (result) {
+                this.setState({
+                    token: result
+                })
+            }
+        })
     }
 
-    _bootstrapAsync = async () => {
-        const userToken = await AsyncStorage.getItem('Token');
-
-        this.props.navigation.navigate(userToken ? 'Home' : 'Login');
-    };
 
     isLogin = async () => {
         if (this.state.email !== '' && this.state.password !== '') {
@@ -35,7 +37,7 @@ class Login extends React.Component {
                 if (result) {
                     this.props.navigation.navigate('Home')
                 } else {
-                    alert('Terjadi Kesalahan saat Login')
+                    alert('Email dan Password tidak cocok')
                 }
             })
         } else {
@@ -44,6 +46,7 @@ class Login extends React.Component {
     }
 
     render() {
+        // console.warn("token: ",this.state.token)
         return (
             <View style={{ flex: 1, marginHorizontal: 20 }}>
                 <Container>
@@ -56,7 +59,6 @@ class Login extends React.Component {
                                     style={styles.inputStyle}
                                     placeholder="Email"
                                     placeholderTextColor="#bbb"
-                                    value='tes1@coba.com'
                                     onChangeText={email => this.setState({ email })} />
                             </Item>
                             <Item rounded style={{ marginBottom: 20 }}>
@@ -65,7 +67,7 @@ class Login extends React.Component {
                                     style={styles.inputStyle}
                                     placeholder="Password"
                                     placeholderTextColor="#bbb"
-                                    value='1234'
+                                    secureTextEntry={true}
                                     onChangeText={password => this.setState({ password })} />
                             </Item>
                             <View style={{ flexDirection: 'row', marginTop: 20 }}>
